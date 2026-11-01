@@ -1,14 +1,8 @@
 #include <stdio.h>       
 #include "tabuleiro.h"
-/* TAM é um valor definido no .h (equivale ao tamanho padrão [3][3] matriz
-Vazio 0 (0 é invisivel na matriz) casa_0 = 1 casa_x = 4 sem_vencedor = 0
-*/ 
-/* confere se linha e coluna estao dentro do tabuleiro (0 a 2).
-   Serve pra nunca acessar uma posicao que nao existe na matriz */
 static int posicaoValida(int linha, int coluna) {
     return linha >= 0 && linha < TAM && coluna >= 0 && coluna < TAM;
 }
-//nessa função eu devlaro o ponteiro chamado tab que recebe o endereço repassado por tem vencedor para fazer os cálculos na matriz e repassar se tem ou não vencedor e quem é, Tabuleiro é o tipo de estrutura em tabuleiro.h 
 static int somaLCD(const Tabuleiro *tab) {
     int somalcd[4] = {0,0,0,0}, linha = 0, coluna = 0;
     //soma lcd é um array contendo todas as informações de soma numéricas do fluxo da partida (valores) posição 0 linha coluna 1 diagonal de cima 2 diagonal debaixo 3
@@ -39,9 +33,6 @@ static int somaLCD(const Tabuleiro *tab) {
     
 }
 
-/* ---------- funcoes publicas (declaradas no tabuleiro.h) ---------- */
-
-//todo elemento da matriz 3x3(tabuleiro) ganha o valor vazio que é definido em tabuleiro.h como vazio = 0 (zera todas posições do tabuleiro, jogo novo ou iniciar o primeiro jogo)
 void inicializa(Tabuleiro *tab) {
     for (int linha = 0; linha < TAM; linha++) {        
         for (int coluna = 0; coluna < TAM; coluna++) {   
