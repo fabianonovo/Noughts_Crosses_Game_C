@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <ctype.h> 
 #include "tabuleiro.h"
+#include "partida.h"
+#include "pvp.h"
+#include "cpu.h"
 
 // função para o jogador escolher se quer 'X' ou 'O'
 static char escolher_X_ou_O() { 
@@ -29,7 +32,8 @@ static char escolher_X_ou_O() {
 static char mode() { 
     char escolha;
     
-    printf("\022[2J\033[H");
+    printf("\033[2J\033[H");
+
     printf("\n |        MODO DE JOGO        |\n"
             "1 - PVP (Local)\n"
             "2 - PLAYER VS CPU (IA)\n"
@@ -37,31 +41,32 @@ static char mode() {
             "Escolha a opcao desejada: ");
           
     scanf(" %c", &escolha);
-    
+    printf("\033[2J\033");
     switch (escolha) { 
         case '1': 
             printf("Modo selecionado: Humano vs Humano\n");
-            return '1';
+            return MODO_PVP;
         case '2': 
             printf("Modo selecionado: Humano vs Computador\n");
-            return '2';
+            return MODO_CPU;
         case '3':
             printf("Modo selecionado: Jogador Remoto\n");
-            return '3';
+            return MODO_MULTIPLAYER;
         default:
             printf("Opcao invalida. A assumindo o modo Local.\n");
-            return '1'; 
+            return MODO_PVP; 
     }
 }
 
 // inicia a estrutura do jogo
-static int gerenciar_partidas(char config[2]) {
+int gerenciar_partidas(char config[2]) {
     int redireciona[2][2]; 
-    int rodada = 0, status_jogo = 0;
-    int turno_atual = CASA_X; //x padrão de inicio
+    int status_jogo = 0;
+    int turno_atual = CASA_X, rodada = 0; 
     
     Tabuleiro tab;     
     inicializa(&tab);  
+    desenha(&tab);
 
     while (rodada < 9 && status_jogo == SEM_VENCEDOR) {
         //quem joga no turno
@@ -90,7 +95,7 @@ static int gerenciar_partidas(char config[2]) {
     return SEM_VENCEDOR; 
 }
 
-static void start_game(char config[2]);
+void start_game(char config[2]);
 
 static void fim_jogo(char config[2]) {
     int vencedores_rodadas_x_o[2] = {0, 0}; 
@@ -121,20 +126,8 @@ static void fim_jogo(char config[2]) {
         }
     } while (escolha == 1);
 }
-//inicia o tabuleiro 3x3, que logo iniciara a jogada
-static void rotear_jogo(char config[2]) {
-    if (config[0] == '1') {
-        config[0] = 'p'; 
-    }else if (config[0] == '2'){
-        config[0] = 'c'; 
-    }else if (config[0] == '3'){
-        config[0] = 'm'; 
-    }
-}
-
-void start_game(char config[2]) { 
+void start_game(char config[2]) {
     config[0] = mode();
-    rotear_jogo(config);
     config[1] = escolher_X_ou_O();  
     fim_jogo(config);  
 }
